@@ -1,6 +1,8 @@
 ## A quick java block chain prototype
 ### Features
 - concise core java implementation without j2ee or any 3rd party components
+- tcp socket implemented http service as rpc call
+- distributed block chains running
 - mine: to add a new block
 - chain: to list all nodes in a chain
 - register other nodes
