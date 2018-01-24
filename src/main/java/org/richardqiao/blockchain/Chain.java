@@ -11,7 +11,7 @@ public class Chain {
   public Chain(String owner){
     this.owner = owner;
     list = new LinkedList<>();
-    list.add(new Block(1, new ArrayList<>(), new ProofOfWork(0), 0));
+    list.add(new Block(1, new ArrayList<>(), new ProofOfWork(0), "0"));
     curTrans = new ArrayList<>();
   }
 
@@ -68,7 +68,7 @@ public class Chain {
     ProofOfWork proof = last.proof;
     ProofOfWork newProof = proof.getNextSolution();
     newTransaction("genesis", owner, 1);
-    int prevHash = last.hashCode();
+    String prevHash = last.getSHA256();
     Block blk = new Block(list.size() + 1, curTrans, newProof, prevHash);
     list.add(blk);
     curTrans = new ArrayList<>();
@@ -87,7 +87,7 @@ public class Chain {
     Block last = null;
     for(Block cur: list){
       if(last != null){
-        if(cur.previous_hash != last.hashCode()) return false;
+        if(cur.previous_hash.equals(last.getSHA256())) return false;
         if(!ProofOfWork.validProof(cur.proof, last.proof)) return false;
       }
       last = cur;

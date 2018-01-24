@@ -32,7 +32,7 @@ curl -X GET -H "Content-Type: application/json" "http://localhost:5679/nodes/res
 curl -X GET -H "Content-Type: application/json" "http://localhost:5679/chain"
 
 # 5. Add transaction on 0.0.0.0:5679
-curl -X POST -H "Content-Type: application/json" -d '{sender:richard,recipient:KPMG,amount:5}' "http://localhost:5678/transaction"
+curl -X POST -H "Content-Type: application/json" -d '{sender:richard,recipient:KPMG,amount:5}' "http://localhost:5679/transaction"
 
 # 6. Mine it on 0.0.0.0:5679
 curl -X GET -H "Content-Type: application/json" "http://localhost:5679/mine"

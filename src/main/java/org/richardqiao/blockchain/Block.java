@@ -1,5 +1,7 @@
 package org.richardqiao.blockchain;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +10,7 @@ public class Block {
   long timestamp;
   List<Transaction> transactions;
   ProofOfWork proof;
-  int previous_hash;
+  String previous_hash;
 
   @Override
   public Block clone(){
@@ -21,7 +23,7 @@ public class Block {
     return cln;
   }
 
-  public Block(int idx, List<Transaction> trans, ProofOfWork proof, int prevHash){
+  public Block(int idx, List<Transaction> trans, ProofOfWork proof, String prevHash){
     index = idx;
     timestamp = System.currentTimeMillis();
     transactions = trans;
@@ -48,6 +50,23 @@ public class Block {
     return toString().hashCode();
   }
 
+  public String getSHA256(){
+    try {
+      MessageDigest digest = MessageDigest.getInstance("SHA-256");
+      byte[] hash = digest.digest(toString().getBytes(StandardCharsets.UTF_8));
+      StringBuilder sb = new StringBuilder();
+      for(byte bt: hash){
+        String hex = Integer.toHexString(0xff & bt);
+        if(hex.length() == 1) sb.append(0);
+        sb.append(hex);
+      }
+      return sb.toString();
+    }catch(Exception ex){
+      ex.printStackTrace();
+    }
+    return "";
+  }
+
   public static Block getFromJson(String json){
     int i = 0, j = 0;
     int stack = 0;
@@ -66,13 +85,13 @@ public class Block {
     if(i < j){
       list.add(json.substring(i, j));
     }
-    Block blk = new Block(0, new ArrayList<>(), null, 0);
+    Block blk = new Block(0, new ArrayList<>(), null, "0");
     for(String str: list){
       String[] strs = str.split(":");
       if(strs[0].equals("index")){
         blk.index = Integer.parseInt(strs[1]);
       }else if(strs[0].equals("previous_hash")){
-        blk.previous_hash = Integer.parseInt(strs[1]);
+        blk.previous_hash = strs[1];
       }else if(strs[0].equals("proof")){
         blk.proof = ProofOfWork.getFromJson(str);
       }else if(strs[0].equals("timestamp")){
